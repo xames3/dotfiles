@@ -4,7 +4,7 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 13 December, 2020
-" Last updated on: 08 January, 2026
+" Last updated on: 09 January, 2026
 "
 " This file contains options/configurations for modifying the general
 " behaviour of my (overall) Vim text editor.
@@ -14,10 +14,13 @@
 " ----------------------------------------------------------------------------
 set autoindent                          " Enables basic auto-indentation
 set backspace=indent,eol,start          " Enables backspacing over everything
+set colorcolumn=79                      " Show column (bar) at X characters
 set expandtab                           " Use spaces instead of tabs
+set hlsearch                            " Highlight search results
 set list                                " Enable list mode
 set listchars=trail:$,tab:██            " Show trailing and tab characters
 set mouse=n                             " Allows dragging with mouse
+set nocompatible                        " Disable vim compatiblity
 set nospell                             " Turn off spell checking
 set number                              " Enables line numbering
 set relativenumber                      " Show relative line number
@@ -28,9 +31,7 @@ set softtabstop=4                       " Shift (in/dedent) by X spaces
 set spelllang=en_gb                     " Set British English as language
 set tabstop=4                           " Shift (in/dedent) by X spaces
 set termguicolors                       " Allows usage of GUI values
-set textwidth=80                        " Automatically wrap lines
-set title                               " Set the title
-set hlsearch                            " Highlight search results
+set textwidth=79                        " Automatically wrap lines
 
 " ----------------------------------------------------------------------------
 " NetRW configurations
@@ -59,8 +60,8 @@ set statusline +=\ Col:\ %c             " Show current column
 " Syntax, theme, and colour configurations
 " ----------------------------------------------------------------------------
 syntax on                               " Enables syntax highlighting
-colorscheme dark-retrobox               " Colour theme + syntax highlighting
-let g:indentLine_char = '¦'             " Indentation character
+let g:indentLine_char = '┊'             " Indentation character
+colorscheme srcery                      " Colour theme + syntax highlighting
 
 " ----------------------------------------------------------------------------
 " Functions to add (some) functionality
@@ -73,30 +74,41 @@ function! GitHead()
   return strlen(l:branchname) > 0?' HEAD: '.l:branchname.' ':''
 endfunction
 
-" Clone the plugin repository in the plugged directory (like a plugin)
-function! s:ensure(repo)
-    let name = split(a:repo, '/')[-1]
-    let s:plugin_dir = expand('~/.vim/plugged')
-    let path = s:plugin_dir . '/' . name
-    if !isdirectory(path)
-        if !isdirectory(s:plugin_dir)
-            call mkdir(s:plugin_dir, 'p')
-        endif
-        execute '!git clone --depth=1 ' .
-            \ 'https://github.com/' .
-            \ a:repo .
-            \ ' ' .
-            \ shellescape(path)
+" Ensure a GitHub plugin/theme is installed and loaded correctly
+function! s:install(repo, ...) abort
+    let args = {
+        \ 'group': 'plugins',
+        \ 'type': 'opt',
+        \ 'load': 1,
+        \ }
+
+    if a:0 > 0 && type(a:1) == v:t_dict
+        call extend(args, a:1)
     endif
-  execute 'set runtimepath+=' . fnameescape(path)
+
+    let name = fnamemodify(a:repo, ':t')
+    let base = expand('~/.vim/pack/' . args.group . '/' . args.type)
+    let path = base . '/' . name
+
+    if !isdirectory(path)
+        call mkdir(base, 'p')
+        execute '!git clone --depth=1 https://github.com/' .
+            \ a:repo . ' ' . shellescape(path)
+    endif
+
+    if args.type ==# 'opt' && args.load
+        execute 'packadd! ' . name
+    endif
 endfunction
 
 " Auto-update `Last updated on` date on save
 function! s:UpdateLastUpdated() abort
+    let l:date = strftime('%d %B, %Y')
+
     if expand('%:t') ==# 'options.vim'
         return
     endif
-    let l:date = strftime('%d %B, %Y')
+
     silent! keepjumps keeppatterns
         \ %s/\v^(\s*[^A-Za-z0-9]*\s*)Last updated on:.*$/\=submatch(1).'Last updated on: '.l:date/e
 endfunction
@@ -109,9 +121,10 @@ filetype plugin indent on
 " Filetype specific configurations
 augroup FileTypeSpecificConfigurations
     autocmd!
-    autocmd FileType netrw        setlocal bufhidden=delete
-    autocmd FileType python       setlocal colorcolumn=72,79
-    autocmd FileType rst          setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=79
+    autocmd FileType netrw      setlocal bufhidden=delete
+    autocmd FileType python     setlocal colorcolumn=72,79
+    autocmd FileType rst        setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=79
+    autocmd FileType vim        setlocal textwidth=0
 augroup END
 
 " Auto-update `Last updated on` date on save
@@ -121,11 +134,13 @@ augroup UpdateLastModified
 augroup END
 
 " ----------------------------------------------------------------------------
-" Installed plugins
+" Installed plugin(s) and theme(s)
 " ----------------------------------------------------------------------------
-call s:ensure('dense-analysis/ale')     " LSP Server
-call s:ensure('junegunn/fzf')           " Fuzzy finder utility
-call s:ensure('junegunn/fzf.vim')       " Fuzzy finder for vim
+call s:install('srcery-colors/srcery-vim', { 'group': 'themes' })
+call s:install('dense-analysis/ale', { 'type': 'start' })
+call s:install('junegunn/fzf', { 'type': 'start' })
+call s:install('junegunn/fzf.vim', { 'type': 'start' })
+call s:install('Yggdroot/indentLine', { 'group': 'vendor', 'type': 'start' })
 
 " ----------------------------------------------------------------------------
 " Abbreviations
