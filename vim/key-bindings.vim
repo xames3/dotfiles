@@ -4,7 +4,7 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 13 December, 2020
-" Last updated on: 08 January, 2026
+" Last updated on: 09 January, 2026
 "
 " This file contains my custom key-bindings/remappings that I use for my code
 " development.
