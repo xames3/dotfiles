@@ -4,7 +4,7 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 13 December, 2020
-" Last updated on: 09 January, 2026
+" Last updated on: 10 January, 2026
 "
 " This file contains options/configurations for modifying the general
 " behaviour of my (overall) Vim text editor.
@@ -17,6 +17,7 @@ set backspace=indent,eol,start          " Enables backspacing over everything
 set colorcolumn=79                      " Show column (bar) at X characters
 set expandtab                           " Use spaces instead of tabs
 set hlsearch                            " Highlight search results
+set incsearch                           " Highlight search results as you type
 set list                                " Enable list mode
 set listchars=trail:$,tab:██            " Show trailing and tab characters
 set mouse=n                             " Allows dragging with mouse
@@ -59,8 +60,10 @@ set statusline +=\ Col:\ %c             " Show current column
 " ----------------------------------------------------------------------------
 " Syntax, theme, and colour configurations
 " ----------------------------------------------------------------------------
-syntax on                               " Enables syntax highlighting
+syntax on                               " Enable syntax highlighting
 let g:indentLine_char = '┊'             " Indentation character
+let g:indentLine_leadingSpaceChar = '.' " Character used in indentations
+let g:indentLine_leadingSpaceEnabled = 1" Show characters in indentations
 colorscheme srcery                      " Colour theme + syntax highlighting
 
 " ----------------------------------------------------------------------------
@@ -132,6 +135,12 @@ augroup UpdateLastModified
     autocmd!
     autocmd BufWritePre * call s:UpdateLastUpdated()
 augroup END
+
+" Auto-delete all trailing whitespace(s) on save
+autocmd BufWritePre * %s/\s\+$//e
+
+" Automatically `cd` into the directory that the current file is in
+autocmd BufEnter * execute "chdir " .escape(expand("%:p:h"), ' ')
 
 " ----------------------------------------------------------------------------
 " Installed plugin(s) and theme(s)
