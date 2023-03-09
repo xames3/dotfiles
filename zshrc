@@ -2,7 +2,7 @@
 #
 # Author: Akshay Mestry <xa@mes3.dev>
 # Created on: 13 December, 2020
-# Last updated on: 09 January, 2026
+# Last updated on: 16 January, 2026
 #
 # This file contains most (if not all) of my Zsh configurations.
 
@@ -16,11 +16,9 @@ export HISTSIZE=10000
 export SAVEHIST=10000
 export HOMEBREW_NO_ENV_HINTS=TRUE
 export PYENV_ROOT="$HOME/.pyenv"
-export PYTHONSTARTUP=~/.pythonrc.py
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude '*.swp'"
 export EDITOR='vim'
 export VISUAL='vim'
-
 
 # Directory variables
 export WORKSPACE=$HOME/Developer/Workspace
@@ -43,11 +41,11 @@ alias evimrc='vi ~/.vim/options.vim'
 alias ezshrc='vi ~/.zshrc'
 alias hl='rg --passthru'
 alias ip='ipconfig getifaddr en0'
-alias github='open_on_github'
+alias github='open-on-github'
 alias 26='cd $WORKSPACE/2026'
 
 # Utility functions
-open_on_github() {
+open-on-github() {
     local url repo
     git rev-parse --is-inside-work-tree >/dev/null 2>&1 || {
         echo "[ERROR] Not a git repository"

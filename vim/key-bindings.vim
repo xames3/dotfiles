@@ -4,7 +4,7 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 13 December, 2020
-" Last updated on: 10 January, 2026
+" Last updated on: 16 January, 2026
 "
 " This file contains my custom key-bindings/remappings that I use for my code
 " development.
@@ -29,3 +29,13 @@ nnoremap <leader>st  :%s//g<Left><Left>
 nnoremap <leader>ff  :Files<CR>
 nnoremap <leader>fo  :History<CR>
 nnoremap <leader>fb  :Buffers<CR>
+
+" ----------------------------------------------------------------------------
+" Disable arrow keys
+" ----------------------------------------------------------------------------
+for key in ['<Up>', '<Down>', '<Left>', '<Right>']
+    exec 'nnoremap' key '<Nop>'
+    exec 'inoremap' key '<Nop>'
+    exec 'cnoremap' key '<Nop>'
+    exec 'vnoremap' key '<Nop>'
+endfor
