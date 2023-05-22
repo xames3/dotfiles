@@ -35,7 +35,6 @@ nnoremap <leader>fb  :Buffers<CR>
 " ----------------------------------------------------------------------------
 for key in ['<Up>', '<Down>', '<Left>', '<Right>']
     exec 'nnoremap' key '<Nop>'
-    exec 'inoremap' key '<Nop>'
     exec 'cnoremap' key '<Nop>'
     exec 'vnoremap' key '<Nop>'
 endfor
