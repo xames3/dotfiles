@@ -63,7 +63,7 @@ syntax on                               " Enable syntax highlighting
 let g:indentLine_char = '┊'             " Indentation character
 let g:indentLine_leadingSpaceChar = '.' " Character used in indentations
 let g:indentLine_leadingSpaceEnabled = 1" Show characters in indentations
-colorscheme srcery                      " Colour theme + syntax highlighting
+colorscheme unokai26                    " Colour theme + syntax highlighting
 
 " -----------------------------------------------------------------------------
 " Functions to add (some) functionality
@@ -144,7 +144,6 @@ autocmd BufEnter * execute "chdir " .escape(expand("%:p:h"), ' ')
 " -----------------------------------------------------------------------------
 " Installed plugin(s) and theme(s)
 " -----------------------------------------------------------------------------
-call s:install('srcery-colors/srcery-vim', { 'group': 'themes' })
 call s:install('dense-analysis/ale', { 'type': 'start' })
 call s:install('junegunn/fzf', { 'type': 'start' })
 call s:install('junegunn/fzf.vim', { 'type': 'start' })
