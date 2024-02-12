@@ -32,6 +32,10 @@ set spelllang=en_gb                     " Set British English as language
 set tabstop=4                           " Shift (in/dedent) by X spaces
 set termguicolors                       " Allows usage of GUI values
 set textwidth=80                        " Automatically wrap lines
+set ignorecase                          " Ignore case when searching
+set smartcase                           " Override ignorecase if search has caps
+set splitbelow                          " Open horizontal splits below
+set splitright                          " Open vertical splits to the right
 
 " -----------------------------------------------------------------------------
 " NetRW configurations
@@ -83,21 +87,17 @@ function! s:install(repo, ...) abort
         \ 'type': 'opt',
         \ 'load': 1,
         \ }
-
     if a:0 > 0 && type(a:1) == v:t_dict
         call extend(args, a:1)
     endif
-
     let name = fnamemodify(a:repo, ':t')
     let base = expand('~/.vim/pack/' . args.group . '/' . args.type)
     let path = base . '/' . name
-
     if !isdirectory(path)
         call mkdir(base, 'p')
         execute '!git clone --depth=1 https://github.com/' .
             \ a:repo . ' ' . shellescape(path)
     endif
-
     if args.type ==# 'opt' && args.load
         execute 'packadd! ' . name
     endif
@@ -105,14 +105,17 @@ endfunction
 
 " Auto-update `Last updated on` date on save
 function! s:UpdateLastUpdated() abort
-    let l:date = strftime('%d %B, %Y')
-
+    if !&modified
+        return
+    endif
     if expand('%:t') ==# 'options.vim'
         return
     endif
-
+    let l:view = winsaveview()
+    let l:date = strftime('%d %B, %Y')
     silent! keepjumps keeppatterns
         \ %s/\v^(\s*[^A-Za-z0-9]*\s*)Last updated on:.*$/\=submatch(1).'Last updated on: '.l:date/e
+    call winrestview(l:view)
 endfunction
 
 " -----------------------------------------------------------------------------
@@ -136,10 +139,16 @@ augroup UpdateLastModified
 augroup END
 
 " Auto-delete all trailing whitespace(s) on save
-autocmd BufWritePre * %s/\s\+$//e
+augroup TrimWhitespace
+    autocmd!
+    autocmd BufWritePre * if search('\s\+$', 'nw') | %s/\s\+$//e | endif
+augroup END
 
 " Automatically `cd` into the directory that the current file is in
-autocmd BufEnter * execute "chdir " .escape(expand("%:p:h"), ' ')
+augroup AutoChdir
+    autocmd!
+    autocmd BufEnter * execute "chdir " . escape(expand("%:p:h"), ' ')
+augroup END
 
 " -----------------------------------------------------------------------------
 " Installed plugin(s) and theme(s)
