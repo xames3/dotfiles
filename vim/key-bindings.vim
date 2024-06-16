@@ -4,7 +4,7 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 13 December, 2020
-" Last updated on: 24 January, 2026
+" Last updated on: 27 March, 2026
 "
 " This file contains my custom key-bindings/remappings that I use for my code
 " development.
@@ -17,20 +17,32 @@ let mapleader = " "
 " -----------------------------------------------------------------------------
 " General key-bindings/remappings
 " -----------------------------------------------------------------------------
-nnoremap <leader>cc  :execute "set colorcolumn=" . (&colorcolumn == "" ? "80" : "")<CR>
-nnoremap <leader>cd  :Ex<CR>
-nnoremap <leader>nt  :tabnew<CR>
-nnoremap <leader>vt  :vertical botright terminal<CR>
-nnoremap <leader>st  :%s//g<Left><Left>
-nnoremap <leader>tn  :tabnext<CR>
-nnoremap <leader>tp  :tabprevious<CR>
+nnoremap <leader>cc              :execute "set colorcolumn=" . (&colorcolumn == "" ? "80" : "")<CR>
+nnoremap <leader>cd              :Ex<CR>
+nnoremap <leader>nt              :tabnew<CR>
+nnoremap <leader>vt              :vertical botright terminal<CR>
+nnoremap <leader>st              :%s//g<Left><Left>
+nnoremap <leader>tn              :tabnext<CR>
+nnoremap <leader>tp              :tabprevious<CR>
+nnoremap <silent> <Esc>          :nohlsearch<CR>
 
 " -----------------------------------------------------------------------------
 " FZF (files) related key-bindings/remappings
 " -----------------------------------------------------------------------------
-nnoremap <leader>ff  :Files<CR>
-nnoremap <leader>fo  :History<CR>
-nnoremap <leader>fb  :Buffers<CR>
+nnoremap <leader>ff              :Files<CR>
+nnoremap <leader>fh              :History<CR>
+nnoremap <leader>fb              :Buffers<CR>
+nnoremap <leader>fg              :Rg<Space>
+
+" -----------------------------------------------------------------------------
+" Write/Quit command override
+" -----------------------------------------------------------------------------
+command Q  q
+command Q! q!
+command W  w
+command W! w!
+command Wq wq
+command WQ wq
 
 " -----------------------------------------------------------------------------
 " Disable arrow keys

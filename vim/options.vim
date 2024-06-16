@@ -4,7 +4,7 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 13 December, 2020
-" Last updated on: 10 January, 2026
+" Last updated on: 27 March, 2026
 "
 " This file contains options/configurations for modifying the general
 " behaviour of my (overall) Vim text editor.
@@ -14,28 +14,29 @@
 " -----------------------------------------------------------------------------
 set autoindent                          " Enables basic auto-indentation
 set backspace=indent,eol,start          " Enables backspacing over everything
-set colorcolumn=80                      " Show column (bar) at X characters
 set expandtab                           " Use spaces instead of tabs
 set hlsearch                            " Highlight search results
+set ignorecase                          " Ignore case when searching
 set incsearch                           " Highlight search results as you type
 set list                                " Enable list mode
 set listchars=trail:$,tab:██            " Show trailing and tab characters
 set mouse=n                             " Allows dragging with mouse
 set nocompatible                        " Disable vim compatiblity
 set number                              " Enables line numbering
+set path+=**                            " Search down into subfolders
 set relativenumber                      " Show relative line number
 set shiftwidth=4                        " Shift (in/dedent) by X spaces
 set showmatch                           " Show matching (), [], or {}
+set smartcase                           " Override ignorecase if search has caps
 set smartindent                         " Enables basic auto-indentation
 set softtabstop=4                       " Shift (in/dedent) by X spaces
 set spelllang=en_gb                     " Set British English as language
+set splitbelow                          " Open horizontal splits below
+set splitright                          " Open vertical splits to the right
 set tabstop=4                           " Shift (in/dedent) by X spaces
 set termguicolors                       " Allows usage of GUI values
 set textwidth=80                        " Automatically wrap lines
-set ignorecase                          " Ignore case when searching
-set smartcase                           " Override ignorecase if search has caps
-set splitbelow                          " Open horizontal splits below
-set splitright                          " Open vertical splits to the right
+set wildmenu                            " Display all matching files
 
 " -----------------------------------------------------------------------------
 " NetRW configurations
@@ -56,7 +57,6 @@ set statusline=                         " Show an empty statusline
 set statusline +=%F                     " Show complete filename
 set statusline +=\ %m%r                 " Show modified/readonly flag(s)
 set statusline +=\ %=                   " Align everything to right
-set statusline +=\ %{GitHead()}         " Show git branch
 set statusline +=\ Line:\ %l/%L         " Show line X of Y
 set statusline +=\ Col:\ %c             " Show current column
 
@@ -72,14 +72,6 @@ colorscheme unokai26                    " Colour theme + syntax highlighting
 " -----------------------------------------------------------------------------
 " Functions to add (some) functionality
 " -----------------------------------------------------------------------------
-" Show current git branch (HEAD)
-function! GitHead()
-    let l:branchname = system(
-        \ "git rev-parse --abbrev-ref HEAD 2>/dev/null | tr -d '\n'"
-        \ )
-  return strlen(l:branchname) > 0?' HEAD: '.l:branchname.' ':''
-endfunction
-
 " Ensure a GitHub plugin/theme is installed and loaded correctly
 function! s:install(repo, ...) abort
     let args = {
@@ -114,7 +106,7 @@ function! s:UpdateLastUpdated() abort
     let l:view = winsaveview()
     let l:date = strftime('%d %B, %Y')
     silent! keepjumps keeppatterns
-        \ %s/\v^(\s*[^A-Za-z0-9]*\s*)Last updated on:.*$/\=submatch(1).'Last updated on: '.l:date/e
+        \ 1,30s/\v^(\s*[^A-Za-z0-9]*\s*)Last updated on:.*$/\=submatch(1).'Last updated on: '.l:date/e
     call winrestview(l:view)
 endfunction
 
@@ -128,7 +120,7 @@ augroup FileTypeSpecificConfigurations
     autocmd!
     autocmd FileType netrw      setlocal bufhidden=delete
     autocmd FileType python     setlocal colorcolumn=72,80
-    autocmd FileType rst        setlocal tabstop=4 shiftwidth=4 softtabstop=4 textwidth=80 spell
+    autocmd FileType rst        setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4 textwidth=80 spell colorcolumn=80
     autocmd FileType vim        setlocal textwidth=0
 augroup END
 
@@ -147,7 +139,7 @@ augroup END
 " Automatically `cd` into the directory that the current file is in
 augroup AutoChdir
     autocmd!
-    autocmd BufEnter * execute "chdir " . escape(expand("%:p:h"), ' ')
+    autocmd BufEnter * if &buftype == '' | execute "chdir " . escape(expand("%:p:h"), ' ') | endif
 augroup END
 
 " -----------------------------------------------------------------------------
