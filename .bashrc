@@ -2,7 +2,7 @@
 #
 # Author: Akshay Mestry <xa@mes3.dev>
 # Created on: 13 December, 2020
-# Last updated on: 20 January, 2026
+# Last updated on: 24 January, 2026
 #
 # This file contains most (if not all) of my bash-related configurations.
 
@@ -14,7 +14,7 @@
 # =============================================================================
 # Set environment variables
 # =============================================================================
-export PS1='\[\e[38;5;39m\]\w\[\e[0m\] \[\e[38;5;41m\]\$\[\e[0m\] '
+export PS1='\[\e[38;5;81m\]\w\[\e[0m\] \[\e[38;5;41m\]\$\[\e[0m\] '
 export HISTSIZE=10000
 export SAVEHIST=10000
 export HOMEBREW_NO_ENV_HINTS=TRUE
@@ -24,8 +24,10 @@ export EDITOR='vim'
 export VISUAL='vim'
 
 # Directory variables
+export DEVELOPER=$HOME/Developer
 export WORKSPACE=$HOME/Developer/Workspace
 export TEACHING=$HOME/Developer/Teaching
+export DOWNLOADS=$HOME/Downloads
 
 # Check if `$PYENV_ROOT/bin` exists, if yes, prepend it to `$PATH`
 [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
@@ -34,12 +36,13 @@ eval "$(pyenv init - bash)"
 # =============================================================================
 # Aliases
 # =============================================================================
-alias ..='cd ..'
+alias cd..='cd ..'
 alias py='python3'
 alias cp='cp -v'
 alias mv='mv -v'
 alias pip='python3 -m pip'
-alias ls='ls -lAFh --color=auto'
+alias ls='ls -gohFAt --color=auto'
+alias downloads='cd $DOWNLOADS'
 alias workspace='cd $WORKSPACE'
 alias teaching='cd $TEACHING'
 alias dy='docker run -ti -v $PWD:/root/ 225 python3'
@@ -51,29 +54,49 @@ alias hl='rg --passthru'
 alias ip='ipconfig getifaddr en0'
 alias github='open-on-github'
 alias 26='cd $WORKSPACE/2026'
+alias dotfiles='cd $WORKSPACE/2026/dotfiles'
+alias website='cd $WORKSPACE/2026/xa'
+alias update='brew update && brew upgrade'
 
 # =============================================================================
 # Utility functions
 # =============================================================================
 
-# error() - Prints an error message.
+# error: error [arg ...]
 #
-# This function prints error messages to stderr with script name and the
-# calling function name or command.
+# Print error message to stderr.
 #
-# Arguments:
-#   $1 = Error message to be printed.
+# This function displays the ARGs (error message), separated by a single space
+# and followed by a newline, on the stderr with script name and the calling
+# function name or command.
 #
-# Returns:
-#   1 - Always returns 1 to indicate an error.
+# Options:
+#     -e    show only the error message
 #
-# Example:
-#   error "Something went wrong, try again."
+# Exit Status:
+# The return code is always non-zero (1), indicating an error in execution.
 error() {
-    local this="${BASH_SOURCE[1]}"
+    local options
+    local only=false
+    local this="${BASH_SOURCE[1]##*/}"
     local func="${FUNCNAME[1]}"
 
-    printf "%s: %s: %s\n" "$this" "$func" "$1" >&2
+    while getopts ":e" options; do
+        case "$options" in
+            e) only=true ;;
+            *) printf "error: invalid option -- %s\n" "$OPTARG" >&2 && return 1 ;;
+        esac
+    done
+
+    shift $((OPTIND - 1))
+    local emsg="$*"
+
+    if $only; then
+        printf "%s\n" "$emsg" >&2
+    else
+        printf "%s: %s: %s\n" "$this" "$func" "$emsg" >&2
+    fi
+
     return 1
 }
 
@@ -102,16 +125,9 @@ open-on-github() {
         || error "No origin remote found" || return
 
     case "$url" in
-        git@github.com:*)
-            repo=${url#git@github.com:}
-            ;;
-        https://github.com/*)
-            repo=${url#https://github.com/}
-            ;;
-        *)
-            error "This repository is not hosted on GitHub"
-            return
-            ;;
+        git@github.com:*)     repo=${url#git@github.com:};;
+        https://github.com/*) repo=${url#https://github.com/};;
+        *)                    error "This repository is not hosted on GitHub" &&  return 1;;
     esac
 
     repo=${repo%.git}
