@@ -4,7 +4,7 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 03 September, 2024
-" Last updated on: 24 January, 2026
+" Last updated on: 27 March, 2026
 "
 " This file contains colorscheme inspired by `Unokai`, which is similarly
 " inspired by `Monokai` theme.
@@ -78,13 +78,13 @@ hi!  link  markdownCodeDelimiter  markdownCode
 
 hi  Normal                    guifg=#f8f8f2  guibg=#282923  guisp=NONE     gui=NONE          ctermfg=255   ctermbg=235   cterm=NONE          term=NONE
 hi  Added                     guifg=#5fd75f  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=77    ctermbg=NONE  cterm=NONE          term=NONE
-hi  Changed                   guifg=#ffaf5f  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=215   ctermbg=NONE  cterm=NONE          term=NONE
+hi  Changed                   guifg=#f92672  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=215   ctermbg=NONE  cterm=NONE          term=NONE
 hi  Character                 guifg=#a6e22e  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=112   ctermbg=NONE  cterm=NONE          term=NONE
-hi  ColorColumn               guifg=NONE     guibg=#585858  guisp=NONE     gui=NONE          ctermfg=NONE  ctermbg=240   cterm=NONE          term=reverse
+hi  ColorColumn               guifg=NONE     guibg=#3a392f  guisp=NONE     gui=NONE          ctermfg=NONE  ctermbg=240   cterm=NONE          term=reverse
 hi  Comment                   guifg=#74705d  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=244   ctermbg=NONE  cterm=NONE          term=NONE
 hi  Conceal                   guifg=#8a8a8a  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=245   ctermbg=NONE  cterm=NONE          term=NONE
 hi  Constant                  guifg=#ae81ff  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=141   ctermbg=NONE  cterm=NONE          term=NONE
-hi  CurSearch                 guifg=#ffaf5f  guibg=#282923  guisp=NONE     gui=reverse       ctermfg=215   ctermbg=235   cterm=reverse       term=reverse
+hi  CurSearch                 guifg=#f92672  guibg=#282923  guisp=NONE     gui=reverse       ctermfg=215   ctermbg=235   cterm=reverse       term=reverse
 hi  CursorColumn              guifg=NONE     guibg=#3a392f  guisp=NONE     gui=NONE          ctermfg=NONE  ctermbg=237   cterm=NONE          term=NONE
 hi  CursorLine                guifg=NONE     guibg=#3a392f  guisp=NONE     gui=NONE          ctermfg=NONE  ctermbg=237   cterm=NONE          term=underline
 hi  CursorLineNr              guifg=#dadada  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=253   ctermbg=NONE  cterm=NONE          term=NONE
@@ -102,7 +102,7 @@ hi  Folded                    guifg=#bababa  guibg=#414141  guisp=NONE     gui=N
 hi  Function                  guifg=#a6e22e  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=112   ctermbg=NONE  cterm=NONE          term=NONE
 hi  Identifier                guifg=#66d9ef  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=81    ctermbg=NONE  cterm=NONE          term=NONE
 hi  Ignore                    guifg=NONE     guibg=NONE     guisp=NONE     gui=NONE          ctermfg=NONE  ctermbg=NONE  cterm=NONE          term=NONE
-hi  IncSearch                 guifg=#ffaf5f  guibg=#282923  guisp=NONE     gui=reverse       ctermfg=215   ctermbg=235   cterm=reverse       term=NONE,reverse,underline
+hi  IncSearch                 guifg=#f92672  guibg=#282923  guisp=NONE     gui=reverse       ctermfg=215   ctermbg=235   cterm=reverse       term=NONE,reverse,underline
 hi  LineNr                    guifg=#8a8a8a  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=245   ctermbg=NONE  cterm=NONE          term=NONE
 hi  LineNrAbove               guifg=#8a8a8a  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=245   ctermbg=NONE  cterm=NONE          term=NONE
 hi  LineNrBelow               guifg=#8a8a8a  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=245   ctermbg=NONE  cterm=NONE          term=NONE
@@ -110,13 +110,13 @@ hi  MatchParen                guifg=#fd971f  guibg=NONE     guisp=NONE     gui=N
 hi  ModeMsg                   guifg=NONE     guibg=NONE     guisp=NONE     gui=NONE          ctermfg=NONE  ctermbg=NONE  cterm=NONE          term=NONE
 hi  MoreMsg                   guifg=#81af24  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=106   ctermbg=NONE  cterm=NONE          term=NONE
 hi  NonText                   guifg=#8a8a8a  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=245   ctermbg=NONE  cterm=NONE          term=NONE
-hi  Pmenu                     guifg=NONE     guibg=#585858  guisp=NONE     gui=NONE          ctermfg=NONE  ctermbg=240   cterm=NONE          term=reverse
-hi  PmenuExtra                guifg=#bababa  guibg=#585858  guisp=NONE     gui=NONE          ctermfg=250   ctermbg=240   cterm=NONE          term=NONE
+hi  Pmenu                     guifg=NONE     guibg=#3a392f  guisp=NONE     gui=NONE          ctermfg=NONE  ctermbg=240   cterm=NONE          term=reverse
+hi  PmenuExtra                guifg=#bababa  guibg=#3a392f  guisp=NONE     gui=NONE          ctermfg=250   ctermbg=240   cterm=NONE          term=NONE
 hi  PmenuExtraSel             guifg=#bababa  guibg=#8a8a8a  guisp=NONE     gui=NONE          ctermfg=250   ctermbg=245   cterm=NONE          term=NONE
-hi  PmenuKind                 guifg=#80beb5  guibg=#585858  guisp=NONE     gui=NONE          ctermfg=73    ctermbg=240   cterm=NONE          term=NONE
+hi  PmenuKind                 guifg=#80beb5  guibg=#3a392f  guisp=NONE     gui=NONE          ctermfg=73    ctermbg=240   cterm=NONE          term=NONE
 hi  PmenuKindSel              guifg=#80beb5  guibg=#8a8a8a  guisp=NONE     gui=NONE          ctermfg=73    ctermbg=245   cterm=NONE          term=NONE
-hi  PmenuMatch                guifg=#ffaf5f  guibg=#585858  guisp=NONE     gui=NONE          ctermfg=215   ctermbg=240   cterm=NONE          term=NONE
-hi  PmenuMatchSel             guifg=#ffaf5f  guibg=#8a8a8a  guisp=NONE     gui=NONE          ctermfg=215   ctermbg=245   cterm=NONE          term=NONE
+hi  PmenuMatch                guifg=#f92672  guibg=#3a392f  guisp=NONE     gui=NONE          ctermfg=215   ctermbg=240   cterm=NONE          term=NONE
+hi  PmenuMatchSel             guifg=#f92672  guibg=#8a8a8a  guisp=NONE     gui=NONE          ctermfg=215   ctermbg=245   cterm=NONE          term=NONE
 hi  PmenuSbar                 guifg=NONE     guibg=NONE     guisp=NONE     gui=NONE          ctermfg=NONE  ctermbg=NONE  cterm=NONE          term=reverse
 hi  PmenuSel                  guifg=NONE     guibg=#8a8a8a  guisp=NONE     gui=NONE          ctermfg=NONE  ctermbg=245   cterm=NONE          term=NONE
 hi  PmenuThumb                guifg=NONE     guibg=#74705d  guisp=NONE     gui=NONE          ctermfg=NONE  ctermbg=244   cterm=NONE          term=NONE
@@ -129,7 +129,7 @@ hi  SignColumn                guifg=NONE     guibg=NONE     guisp=NONE     gui=N
 hi  Special                   guifg=#80beb5  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=73    ctermbg=NONE  cterm=NONE          term=NONE
 hi  SpecialKey                guifg=#8a8a8a  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=245   ctermbg=NONE  cterm=NONE          term=NONE
 hi  SpellBad                  guifg=NONE     guibg=NONE     guisp=#d75f5f  gui=undercurl     ctermfg=167   ctermbg=NONE  cterm=underline     term=underline
-hi  SpellCap                  guifg=NONE     guibg=NONE     guisp=#ffaf5f  gui=undercurl     ctermfg=215   ctermbg=NONE  cterm=underline     term=underline
+hi  SpellCap                  guifg=NONE     guibg=NONE     guisp=#f92672  gui=undercurl     ctermfg=215   ctermbg=NONE  cterm=underline     term=underline
 hi  SpellLocal                guifg=NONE     guibg=NONE     guisp=#5fd75f  gui=undercurl     ctermfg=77    ctermbg=NONE  cterm=underline     term=underline
 hi  SpellRare                 guifg=NONE     guibg=NONE     guisp=#fd5ff0  gui=undercurl     ctermfg=207   ctermbg=NONE  cterm=underline     term=underline
 hi  Statement                 guifg=#f92672  guibg=NONE     guisp=NONE     gui=NONE          ctermfg=197   ctermbg=NONE  cterm=NONE          term=NONE
