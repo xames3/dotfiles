@@ -38,9 +38,7 @@ nnoremap <leader>fg              :Rg<Space>
 " Write/Quit command override
 " -----------------------------------------------------------------------------
 command Q  q
-command Q! q!
 command W  w
-command W! w!
 command Wq wq
 command WQ wq
 
