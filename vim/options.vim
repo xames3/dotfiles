@@ -4,7 +4,7 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 13 December, 2020
-" Last updated on: 27 March, 2026
+" Last updated on: 29 March, 2026
 "
 " This file contains options/configurations for modifying the general
 " behaviour of my (overall) Vim text editor.
@@ -110,6 +110,17 @@ function! s:UpdateLastUpdated() abort
     call winrestview(l:view)
 endfunction
 
+" Remove git commit message template line
+function! s:RemoveTemplateLine() abort
+    if line('$') >=14
+        call setline(14, '')
+    else
+        call append(line('$'), repeat([''], 14 - line('$')))
+    endif
+    call cursor(14, 1)
+    startinsert
+endfunction
+
 " -----------------------------------------------------------------------------
 " Filetype-specific configurations and Autocmds
 " -----------------------------------------------------------------------------
@@ -142,6 +153,12 @@ augroup AutoChdir
     autocmd BufEnter * if &buftype == '' | execute "chdir " . escape(expand("%:p:h"), ' ') | endif
 augroup END
 
+" Automatically remove git commit template line
+augroup CommitMsgCleanup
+    autocmd!
+    autocmd FileType gitcommit autocmd BufWinEnter <buffer> call s:RemoveTemplateLine()
+augroup END
+
 " -----------------------------------------------------------------------------
 " Installed plugin(s) and theme(s)
 " -----------------------------------------------------------------------------
@@ -149,6 +166,7 @@ call s:install('dense-analysis/ale', { 'type': 'start' })
 call s:install('junegunn/fzf', { 'type': 'start' })
 call s:install('junegunn/fzf.vim', { 'type': 'start' })
 call s:install('Yggdroot/indentLine', { 'group': 'vendor', 'type': 'start' })
+call s:install('rust-lang/rust.vim', { 'type': 'start' })
 
 " -----------------------------------------------------------------------------
 " Abbreviations
