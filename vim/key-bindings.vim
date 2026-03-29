@@ -4,7 +4,7 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 13 December, 2020
-" Last updated on: 27 March, 2026
+" Last updated on: 29 March, 2026
 "
 " This file contains my custom key-bindings/remappings that I use for my code
 " development.
@@ -25,6 +25,15 @@ nnoremap <leader>st              :%s//g<Left><Left>
 nnoremap <leader>tn              :tabnext<CR>
 nnoremap <leader>tp              :tabprevious<CR>
 nnoremap <silent> <Esc>          :nohlsearch<CR>
+
+" -----------------------------------------------------------------------------
+" Insert mode related key-bindings/remappings
+" -----------------------------------------------------------------------------
+inoremap (                       ()<Left>
+inoremap [                       []<Left>
+inoremap {                       {}<Left>
+inoremap '                       ''<Left>
+inoremap "                       ""<Left>
 
 " -----------------------------------------------------------------------------
 " FZF (files) related key-bindings/remappings
