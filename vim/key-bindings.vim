@@ -3,8 +3,8 @@
 " =============================================================================
 "
 " Author: Akshay Mestry <xa@mes3.dev>
-" Created on: 13 December, 2020
-" Last updated on: 29 March, 2026
+" Created on: 13 December, 2017
+" Last updated on: 27 April, 2026
 "
 " This file contains my custom key-bindings/remappings that I use for my code
 " development.
@@ -32,7 +32,6 @@ nnoremap <silent> <Esc>          :nohlsearch<CR>
 inoremap (                       ()<Left>
 inoremap [                       []<Left>
 inoremap {                       {}<Left>
-inoremap '                       ''<Left>
 inoremap "                       ""<Left>
 
 " -----------------------------------------------------------------------------
