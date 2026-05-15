@@ -3,7 +3,7 @@
 " =============================================================================
 "
 " Author: Akshay Mestry <xa@mes3.dev>
-" Created on: 13 December, 2020
+" Created on: 13 December, 2017
 " Last updated on: 29 March, 2026
 "
 " This file contains options/configurations for modifying the general
@@ -13,7 +13,9 @@
 " Set configurations
 " -----------------------------------------------------------------------------
 set autoindent                          " Enables basic auto-indentation
+set autoread                            " Auto reload the file if changed
 set backspace=indent,eol,start          " Enables backspacing over everything
+set encoding=utf-8                      " Set UTF-8 encoding, by default
 set expandtab                           " Use spaces instead of tabs
 set hlsearch                            " Highlight search results
 set ignorecase                          " Ignore case when searching
@@ -21,7 +23,11 @@ set incsearch                           " Highlight search results as you type
 set list                                " Enable list mode
 set listchars=trail:$,tab:██            " Show trailing and tab characters
 set mouse=n                             " Allows dragging with mouse
+set nobackup                            " Disable creationg of persistent backups
 set nocompatible                        " Disable vim compatiblity
+set noswapfile                          " Disable creation of `.swp` files
+set nowrap                              " Disable line wrapping
+set nowritebackup                       " Disable temporary backups
 set number                              " Enables line numbering
 set path+=**                            " Search down into subfolders
 set relativenumber                      " Show relative line number
@@ -67,7 +73,9 @@ syntax on                               " Enable syntax highlighting
 let g:indentLine_char = '┊'             " Indentation character
 let g:indentLine_leadingSpaceChar = '.' " Character used in indentations
 let g:indentLine_leadingSpaceEnabled = 1" Show characters in indentations
-colorscheme unokai26                    " Colour theme + syntax highlighting
+let &t_SI = "\e[1 q"                    " Blink in Insert mode
+let &t_EI = "\e[1 q"                    " Blink in Normal mode
+colorscheme lottie                      " Colour theme + syntax highlighting
 
 " -----------------------------------------------------------------------------
 " Functions to add (some) functionality
