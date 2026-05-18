@@ -2,7 +2,7 @@
 #
 # Author: Akshay Mestry <xa@mes3.dev>
 # Created on: 13 December, 2020
-# Last updated on: 17 May, 2026
+# Last updated on: 18 May, 2026
 #
 # This file contains most (if not all) of my bash-related configurations.
 
