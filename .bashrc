@@ -2,7 +2,7 @@
 #
 # Author: Akshay Mestry <xa@mes3.dev>
 # Created on: 13 December, 2020
-# Last updated on: 13 May, 2026
+# Last updated on: 17 May, 2026
 #
 # This file contains most (if not all) of my bash-related configurations.
 
@@ -14,17 +14,21 @@
 # =============================================================================
 # Source bash completions
 # =============================================================================
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    source $(brew --prefix)/etc/bash_completion
+_brew_prefix="$(brew --prefix)"
+if [[ -f "$_brew_prefix/etc/bash_completion" ]]; then
+    source "$_brew_prefix/etc/bash_completion"
 fi
+unset _brew_prefix
 
 # =============================================================================
 # Set environment variables
 # =============================================================================
 export PS1="\[\e[38;5;81m\]\w\[\e[0m\] \[\e[38;5;41m\]\$\[\e[0m\] "
-export PROMPT_COMMAND="autovenv${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
+[[ "$PROMPT_COMMAND" != *autovenv* ]] && \
+    export PROMPT_COMMAND="autovenv${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
+declare -f update_terminal_cwd > /dev/null 2>&1 || update_terminal_cwd() { :; }
 export HISTSIZE=10000
-export SAVEHIST=10000
+export HISTFILESIZE=10000
 export HOMEBREW_NO_ENV_HINTS=TRUE
 export PYENV_ROOT="$HOME/.pyenv"
 export FZF_DEFAULT_COMMAND="fd --type f --hidden --follow --exclude '*.swp'"
@@ -51,21 +55,20 @@ alias cp="cp -v"
 alias mv="mv -v"
 alias pip="python3 -m pip"
 alias ls="ls -gohFAt --color=auto"
-alias downloads="cd $DOWNLOADS"
-alias workspace="cd $WORKSPACE"
-alias teaching="cd $TEACHING"
-alias dy="docker run -ti -v $PWD:/root/ 225 python3"
+alias 225='docker run -ti -v "$PWD:/root/" --name 225 python'
 alias refresh="osascript -e 'tell application \"Safari\" to tell front document to set URL to (get URL)'"
 alias evimrc="vi ~/.vim/options.vim"
 alias ebashrc="vi ~/.bashrc"
 alias sbashrc="source ~/.bashrc"
 alias hl="rg --passthru"
 alias ip="ipconfig getifaddr en0"
-alias github="ghub"
+alias update="brew update && brew upgrade"
+alias downloads="cd $DOWNLOADS"
+alias workspace="cd $WORKSPACE"
+alias teaching="cd $TEACHING"
 alias 26="cd $WORKSPACE/2026"
 alias dotfiles="cd $WORKSPACE/2026/dotfiles"
 alias website="cd $WORKSPACE/2026/website"
-alias update="brew update && brew upgrade"
 
 # =============================================================================
 # Utility functions
@@ -86,6 +89,7 @@ alias update="brew update && brew upgrade"
 # The return code is always non-zero (1), indicating an error in execution.
 error() {
     local options
+    local OPTIND=1
     local only=false
     local this="${BASH_SOURCE[1]##*/}"
     local func="${FUNCNAME[1]}"
@@ -109,35 +113,59 @@ error() {
     return 1
 }
 
-# venvpath
-#
-# Find if virtualenv is located in the directory.
-# Print error message to stderr.
-#
-# This function displays the ARGs (error message), separated by a single space
-# and followed by a newline, on the stderr with script name and the calling
-# function name or command.
-#
-# Options:
-#     -e    show only the error message
-#
-# Exit Status:
-# The return code is always non-zero (1), indicating an error in execution.
 venvpath() {
+    usage() {
+        printf "venvpath: venvpath [-h]\n"
+        printf "    Find the path to the nearest Python virtual environment.\n\n"
+        printf "    Walks up from the list of virtual environment directories. Prints the\n"
+        printf "    absolute path of the first one found, or nothing if none is found.\n\n"
+        printf "    Options:\n"
+        printf "      -h        Show this help and exit\n\n"
+        printf "    Exit Status:\n"
+        printf "    Returns 0 if a virtual environment is found, 1 otherwise.\n"
+    }
+
     local dir="$PWD"
+    local names=("venv2" "env2" ".venv" "venv" "env")
+
+    if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+        usage
+        return 0
+    fi
 
     while [[ "$dir" != "/" ]]; do
-        for name in .venv venv env; do
-            if [[ -f "$dir/$name/bin/activate" ]]; then
-                echo "$dir/$name"
-                return
+        for name in "${names[@]}"; do
+            if [[ -f "$dir/$name/bin/activate" && -x "$dir/$name/bin/python3" ]]; then
+                return 0
             fi
         done
         dir="$(dirname "$dir")"
     done
+    return 1
 }
 
 autovenv() {
+    usage() {
+        printf "autovenv: autovenv [-h]\n"
+        printf "    Automatically activate or deactivate Python virtual environments.\n\n"
+        printf "    Searches for a virtual environment in the current directory tree using\n"
+        printf "    venvpath. Activates the environment if one is found and not already\n"
+        printf "    active. Deactivates the current environment when navigating away from\n"
+        printf "    its directory tree. Respects manual deactivation: running deactivate\n"
+        printf "    suppresses re-activation until you leave and re-enter the directory.\n\n"
+        printf "    This function is normally invoked automatically via PROMPT_COMMAND\n"
+        printf "    and does not need to be called directly.\n\n"
+        printf "    Options:\n"
+        printf "      -h        Show this help and exit\n\n"
+        printf "    Exit Status:\n"
+        printf "    Returns 0 always.\n"
+    }
+
+    if [[ "$1" == "-h" || "$1" == "--help" ]]; then
+        usage
+        return 0
+    fi
+
     local path
     path="$(venvpath)"
 
@@ -145,10 +173,17 @@ autovenv() {
         if [[ -z "$path" || "$path" != "$ACTIVE_VENV" ]]; then
             deactivate 2>/dev/null
             unset ACTIVE_VENV
+            unset AUTOVENV_SKIP
+        elif [[ -z "$VIRTUAL_ENV" ]]; then
+            AUTOVENV_SKIP="$ACTIVE_VENV"
+            unset ACTIVE_VENV
+            return 0
         fi
     fi
 
-    if [[ -z "$VIRTUAL_ENV" && -n "$path" ]]; then
+    [[ -n "$AUTOVENV_SKIP" && "$path" != "$AUTOVENV_SKIP" ]] && unset AUTOVENV_SKIP
+
+    if [[ -z "$VIRTUAL_ENV" && -n "$path" && "$path" != "${AUTOVENV_SKIP-}" ]]; then
         source "$path/bin/activate"
         ACTIVE_VENV="$path"
     fi
@@ -159,13 +194,13 @@ cd() {
     autovenv
 }
 
-ghub() {
+github() {
     usage() {
-        printf "ghub: ghub [-hv] [-a application]\n"
+        printf "github: github [-hv] [-a application]\n"
         printf "    Open the current git repository on GitHub.\n\n"
-        printf "    This function checks if the current directory is a valid git repository. If\n"
-        printf "    it is, it extracts the remote origin URL and opens the repository page in\n"
-        printf "    the default browser. Only GitHub-hosted repositories are supported.\n\n"
+        printf "    Check if the current directory is a valid git repository. If\n"
+        printf "    it is, open the repository page in the default browser.\n\n"
+        printf "    Only GitHub-hosted repositories are supported.\n\n"
         printf "    Options:\n"
         printf "      -a        Application to launch to open GitHub repository\n"
         printf "      -h        Show this help and exit\n"
@@ -176,7 +211,6 @@ ghub() {
         printf "    Exit Status:\n"
         printf "    Returns 0 on success, 1 if the directory is not a git repository, has no\n"
         printf "    origin remote, or the remote is not hosted on GitHub.\n"
-        return 0
     }
 
     local browser="Safari"
@@ -225,31 +259,46 @@ ghub() {
 
 star() {
     usage() {
-        printf "star: star [-h] [-c character] [-s start] [rows]\n"
-        printf "    Print a (right-angled) triangular pattern of character.\n\n"
-        printf "    This function prints 'n' rows where the i-th row contains i characters,\n"
-        printf "    building a right-aligned triangle of the digit 'start' up to width 'n'.\n\n"
+        printf "star: star [-hr] [-c char] [-s start] [-a align] rows\n"
+        printf "    Print a (right-angled) triangular pattern of characters.\n\n"
+        printf "    Prints ROWS rows where the i-th row contains i repetitions of CHAR,\n"
+        printf "    building a triangle from START up to ROWS (or descending with -r).\n\n"
         printf "    Options:\n"
-        printf "      -c        Character in the triangle\n"
+        printf "      -a        Alignment: left (default) or right\n"
+        printf "      -c        Character to fill the triangle with (default: *)\n"
         printf "      -h        Show this help and exit\n"
-        printf "      -s        Triangle to start from\n\n"
+        printf "      -r        Reverse: print a descending triangle\n"
+        printf "      -s        Row to start from (default: 1)\n\n"
         printf "    Exit Status:\n"
-        printf "    Returns 0 on success, 1 if the argument is missing or not a positive\n"
-        printf "    integer.\n"
+        printf "    Returns 0 on success, 1 if an argument is missing, not a positive\n"
+        printf "    integer, or an invalid option is given.\n"
     }
 
     local character="*"
     local startfrom=1
+    local reverse=false
+    local align="left"
 
     while [[ "$#" -gt 0 ]]; do
         case "$1" in
+            -a|--align)
+                case "$2" in
+                    left|right) align="$2" ;;
+                    *) error "invalid alignment -- $2 (choose: left, right)" ; return 1 ;;
+                esac
+                shift 2
+                ;;
             -c|--character)
-                character=$2
+                character="$2"
                 shift 2
                 ;;
             -h|--help)
                 usage
                 return 0
+                ;;
+            -r|--reverse)
+                reverse=true
+                shift
                 ;;
             -s|--start)
                 startfrom="$2"
@@ -267,35 +316,46 @@ star() {
 
     local n="$1"
     [[ -z "$n" ]] && { error "missing operand" ; return 1 ; }
-    [[ $startfrom =~ ^[0-9]+$ ]] || { error "invalid argument for start -- $1" ; return 1 ; }
-    [[ "$n" =~ ^[0-9]+$ ]] || { error "invalid width -- $n" ; return 1 ; }
+    [[ $startfrom =~ ^[1-9][0-9]*$ ]] || { error "invalid argument for start -- $startfrom" ; return 1 ; }
+    [[ "$n" =~ ^[1-9][0-9]*$ ]] || { error "invalid number of rows -- $n" ; return 1 ; }
+    [[ "$startfrom" -le "$n" ]] || { error "start ($startfrom) exceeds rows ($n)" ; return 1 ; }
 
-    local i
-    for i in $(seq $startfrom "$1"); do
-        printf "%*s\n" "$i" | tr " " "$character"
+    local row seq_args
+    $reverse && seq_args="$n -1 $startfrom" || seq_args="$startfrom $n"
+
+    for row in $(seq $seq_args); do
+        if [[ "$align" == "right" ]]; then
+            printf "%${n}s\n" "$(printf "%${row}s" | tr ' ' "$character")"
+        else
+            printf "%${row}s\n" | tr ' ' "$character"
+        fi
     done
 }
 
 spock() {
     usage() {
-        printf "spock: spock [-h] [-s] [-l] [-n]\n"
-        printf "    Add space tiles to the macOS dock.\n\n"
-        printf "    This adds a transparent, app-like spacer to the macOS dock.\n"
-        printf "    It doesn't affect any currently opened apps or existing docks\n"
-        printf "    apps. The dock is restarted automatically to apply the change.\n"
-        printf "    The default behaviour is to add 1 small space space unless otherwise.\n\n"
+        printf "spock: spock [-h] [-s] [-l] [-n count] [-v] [-r]\n"
+        printf "    Add spacer tiles to the macOS Dock.\n\n"
+        printf "    This adds a transparent, app-like spacer to the macOS Dock. It does not\n"
+        printf "    affect any currently opened apps or existing Dock apps. The Dock is\n"
+        printf "    restarted automatically to apply the change. The default behaviour is\n"
+        printf "    to add 1 small spacer tile.\n\n"
         printf "    Options:\n"
-        printf "    -h          Show this help and exit\n"
-        printf "    -l          Use large space tile\n"
-        printf "    -n          Number of tiles to add\n"
-        printf "    -s          Use small space tiles\n\n"
+        printf "      -h        Show this help and exit\n"
+        printf "      -l        Use large spacer tile\n"
+        printf "      -n        Number of tiles to add (default: 1)\n"
+        printf "      -r        Remove all existing spacer tiles and restart the Dock\n"
+        printf "      -s        Use small spacer tile (default)\n"
+        printf "      -v        Use verbose output\n\n"
         printf "    Exit Status:\n"
         printf "    Returns 0 on success, 1 if an invalid option is given or an\n"
         printf "    error occurs.\n"
     }
 
-    local tile="spacer-tile"
+    local tile="small-spacer-tile"
     local count=1
+    local verbose=false
+    local remove=false
 
     while [[ "$#" -gt 0 ]]; do
         case "$1" in
@@ -311,8 +371,16 @@ spock() {
                 count="$2"
                 shift 2
                 ;;
+            -r|--remove)
+                remove=true
+                shift
+                ;;
             -s|--small)
                 tile="small-spacer-tile"
+                shift
+                ;;
+            -v|--verbose)
+                verbose=true
                 shift
                 ;;
             -*)
@@ -325,9 +393,29 @@ spock() {
         esac
     done
 
-    [[ $count =~ ^[0-9]+$ ]] || { error "invalid argument for number -- $1" ; return 1 ; }
+    if $remove; then
+        $verbose && printf "removing all spacer tiles from Dock\n"
+        local plist="$HOME/Library/Preferences/com.apple.dock.plist"
+        local i count_apps type removed=0
+        count_apps=$(/usr/libexec/PlistBuddy -c "Print :persistent-apps" "$plist" 2>/dev/null \
+            | grep -c "Dict")
+        for ((i = count_apps - 1; i >= 0; i--)); do
+            type=$(/usr/libexec/PlistBuddy \
+                -c "Print :persistent-apps:${i}:tile-type" "$plist" 2>/dev/null)
+            if [[ "$type" == "spacer-tile" || "$type" == "small-spacer-tile" ]]; then
+                /usr/libexec/PlistBuddy -c "Delete :persistent-apps:${i}" "$plist"
+                ((removed++))
+                $verbose && printf "removed %s at index %d\n" "$type" "$i"
+            fi
+        done
+        $verbose && printf "removed %d spacer tile(s)\n" "$removed"
+        killall Dock
+        return 0
+    fi
+
+    [[ $count =~ ^[1-9][0-9]*$ ]] || { error "invalid argument for number -- $count" ; return 1 ; }
+    $verbose && printf "adding %d %s(s) to Dock\n" "$count" "$tile"
     local i
-    echo $tile
     for i in $(seq 1 "$count"); do
         defaults write com.apple.dock persistent-apps -array-add \
             "{\"tile-type\"=\"$tile\";}"
