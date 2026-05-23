@@ -2,7 +2,7 @@
 #
 # Author: Akshay Mestry <xa@mes3.dev>
 # Created on: 13 December, 2020
-# Last updated on: 18 May, 2026
+# Last updated on: 23 May, 2026
 #
 # This file contains most (if not all) of my bash-related configurations.
 
@@ -23,7 +23,7 @@ unset _brew_prefix
 # =============================================================================
 # Set environment variables
 # =============================================================================
-export PS1="\[\e[38;5;81m\]\w\[\e[0m\] \[\e[38;5;41m\]\$\[\e[0m\] "
+export PS1="\[\e[38;5;81m\]\W\[\e[0m\] \[\e[38;5;41m\]\$\[\e[0m\] "
 [[ "$PROMPT_COMMAND" != *autovenv* ]] && \
     export PROMPT_COMMAND="autovenv${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
 declare -f update_terminal_cwd > /dev/null 2>&1 || update_terminal_cwd() { :; }
@@ -55,7 +55,6 @@ alias cp="cp -v"
 alias mv="mv -v"
 alias pip="python3 -m pip"
 alias ls="ls -gohFAt --color=auto"
-alias 225='docker run -ti -v "$PWD:/root/" --name 225 python'
 alias refresh="osascript -e 'tell application \"Safari\" to tell front document to set URL to (get URL)'"
 alias evimrc="vi ~/.vim/options.vim"
 alias ebashrc="vi ~/.bashrc"
@@ -66,9 +65,11 @@ alias update="brew update && brew upgrade"
 alias downloads="cd $DOWNLOADS"
 alias workspace="cd $WORKSPACE"
 alias teaching="cd $TEACHING"
+alias 25="cd $WORKSPACE/2025"
 alias 26="cd $WORKSPACE/2026"
 alias dotfiles="cd $WORKSPACE/2026/dotfiles"
 alias website="cd $WORKSPACE/2026/website"
+alias 225='docker run -ti -v "$PWD:/root/" --name 225 python'
 
 # =============================================================================
 # Utility functions
@@ -136,6 +137,7 @@ venvpath() {
     while [[ "$dir" != "/" ]]; do
         for name in "${names[@]}"; do
             if [[ -f "$dir/$name/bin/activate" && -x "$dir/$name/bin/python3" ]]; then
+                echo "$dir/$name"
                 return 0
             fi
         done
