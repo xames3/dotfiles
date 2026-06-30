@@ -4,7 +4,7 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 13 December, 2017
-" Last updated on: 29 March, 2026
+" Last updated on: 30 May, 2026
 "
 " This file contains options/configurations for modifying the general
 " behaviour of my (overall) Vim text editor.
@@ -127,6 +127,17 @@ function! s:RemoveTemplateLine() abort
     endif
     call cursor(14, 1)
     startinsert
+endfunction
+
+" Show root directory of the current directory
+function! RootFiles()
+    let root = systemlist('git rev-parse --show-toplevel')
+    if v:shell_error
+        let root = getcwd()
+    else
+        let root = root[0]
+    endif
+  execute 'Files' fnameescape(root)
 endfunction
 
 " -----------------------------------------------------------------------------

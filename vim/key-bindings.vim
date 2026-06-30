@@ -4,7 +4,7 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 13 December, 2017
-" Last updated on: 27 April, 2026
+" Last updated on: 30 May, 2026
 "
 " This file contains my custom key-bindings/remappings that I use for my code
 " development.
@@ -38,6 +38,7 @@ inoremap "                       ""<Left>
 " FZF (files) related key-bindings/remappings
 " -----------------------------------------------------------------------------
 nnoremap <leader>ff              :Files<CR>
+nnoremap <leader>fr              :call RootFiles()<CR>
 nnoremap <leader>fh              :History<CR>
 nnoremap <leader>fb              :Buffers<CR>
 nnoremap <leader>fg              :Rg<Space>
