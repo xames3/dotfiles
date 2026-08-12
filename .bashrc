@@ -2,7 +2,7 @@
 #
 # Author: Akshay Mestry <xa@mes3.dev>
 # Created on: 13 December, 2020
-# Last updated on: 23 May, 2026
+# Last updated on: 31 July, 2026
 #
 # This file contains most (if not all) of my bash-related configurations.
 
@@ -70,6 +70,7 @@ alias 26="cd $WORKSPACE/2026"
 alias dotfiles="cd $WORKSPACE/2026/dotfiles"
 alias website="cd $WORKSPACE/2026/website"
 alias 225='docker run -ti -v "$PWD:/root/" --name 225 python'
+alias cal='py -m calendar $(date +"%Y %m")'
 
 # =============================================================================
 # Utility functions

@@ -4,7 +4,7 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 13 December, 2017
-" Last updated on: 30 May, 2026
+" Last updated on: 12 August, 2026
 "
 " This file contains options/configurations for modifying the general
 " behaviour of my (overall) Vim text editor.
@@ -31,6 +31,7 @@ set nowritebackup                       " Disable temporary backups
 set number                              " Enables line numbering
 set path+=**                            " Search down into subfolders
 set relativenumber                      " Show relative line number
+set shell=/opt/homebrew/bin/bash        " Homebrew path for Bash
 set shiftwidth=4                        " Shift (in/dedent) by X spaces
 set showmatch                           " Show matching (), [], or {}
 set smartcase                           " Override ignorecase if search has caps
