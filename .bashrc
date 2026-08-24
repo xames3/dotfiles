@@ -2,7 +2,7 @@
 #
 # Author: Akshay Mestry <xa@mes3.dev>
 # Created on: 13 December, 2020
-# Last updated on: 31 July, 2026
+# Last updated on: 23 August, 2026
 #
 # This file contains most (if not all) of my bash-related configurations.
 
@@ -10,6 +10,19 @@
 # Check if the session is running interactively
 # =============================================================================
 [[ -n $PS1 ]] || return
+
+# =============================================================================
+# Warn if the registered login shell has drifted from the current Homebrew
+# bash (happens after `brew upgrade bash` removes the old Cellar version,
+# since macOS's login shell record keeps pointing at the now-deleted path)
+# =============================================================================
+_current_bash="/opt/homebrew/bin/bash"
+_login_shell="$(dscl . -read "/Users/$USER" UserShell 2>/dev/null | awk '{print $2}')"
+if [[ -x $_current_bash && $_login_shell != "$_current_bash" ]]; then
+    echo "warning: login shell ($_login_shell) is stale; run:" >&2
+    echo "  chsh -s $_current_bash" >&2
+fi
+unset _current_bash _login_shell
 
 # =============================================================================
 # Source bash completions
@@ -49,28 +62,21 @@ eval "$(pyenv init - bash)"
 # =============================================================================
 # Aliases
 # =============================================================================
+alias cal='py -m calendar $(date +"%Y %m")'
 alias cd..="cd .."
-alias py="python3"
 alias cp="cp -v"
+alias dotfiles="cd $WORKSPACE/2026/dotfiles"
+alias downloads="cd $DOWNLOADS"
+alias ebashrc="vi ~/.bashrc"
+alias evimrc="vi ~/.vim/options.vim"
+alias ip="ipconfig getifaddr en0"
+alias ls="ls -gohFAt --color=auto"
 alias mv="mv -v"
 alias pip="python3 -m pip"
-alias ls="ls -gohFAt --color=auto"
-alias refresh="osascript -e 'tell application \"Safari\" to tell front document to set URL to (get URL)'"
-alias evimrc="vi ~/.vim/options.vim"
-alias ebashrc="vi ~/.bashrc"
+alias py="python3"
 alias sbashrc="source ~/.bashrc"
-alias hl="rg --passthru"
-alias ip="ipconfig getifaddr en0"
 alias update="brew update && brew upgrade"
-alias downloads="cd $DOWNLOADS"
-alias workspace="cd $WORKSPACE"
-alias teaching="cd $TEACHING"
-alias 25="cd $WORKSPACE/2025"
-alias 26="cd $WORKSPACE/2026"
-alias dotfiles="cd $WORKSPACE/2026/dotfiles"
 alias website="cd $WORKSPACE/2026/website"
-alias 225='docker run -ti -v "$PWD:/root/" --name 225 python'
-alias cal='py -m calendar $(date +"%Y %m")'
 
 # =============================================================================
 # Utility functions
