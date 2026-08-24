@@ -4,7 +4,7 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 13 December, 2017
-" Last updated on: 12 August, 2026
+" Last updated on: 23 August, 2026
 "
 " This file contains options/configurations for modifying the general
 " behaviour of my (overall) Vim text editor.
@@ -71,12 +71,9 @@ set statusline +=\ Col:\ %c             " Show current column
 " Syntax, theme, and colour configurations
 " -----------------------------------------------------------------------------
 syntax on                               " Enable syntax highlighting
-let g:indentLine_char = '┊'             " Indentation character
-let g:indentLine_leadingSpaceChar = '.' " Character used in indentations
-let g:indentLine_leadingSpaceEnabled = 1" Show characters in indentations
-let &t_SI = "\e[1 q"                    " Blink in Insert mode
-let &t_EI = "\e[1 q"                    " Blink in Normal mode
 colorscheme lottie                      " Colour theme + syntax highlighting
+let &t_EI = "\e[1 q"                    " Blink in Normal mode
+let &t_SI = "\e[5 q"                    " Blink in Insert mode
 
 " -----------------------------------------------------------------------------
 " Functions to add (some) functionality
@@ -149,6 +146,7 @@ filetype plugin indent on
 " Filetype specific configurations
 augroup FileTypeSpecificConfigurations
     autocmd!
+    autocmd FileType c          setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4 textwidth=78 colorcolumn=78 formatoptions+=t
     autocmd FileType netrw      setlocal bufhidden=delete
     autocmd FileType python     setlocal colorcolumn=72,80
     autocmd FileType rst        setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4 textwidth=80 spell colorcolumn=80
@@ -182,17 +180,24 @@ augroup END
 " -----------------------------------------------------------------------------
 " Installed plugin(s) and theme(s)
 " -----------------------------------------------------------------------------
-call s:install('dense-analysis/ale', { 'type': 'start' })
 call s:install('junegunn/fzf', { 'type': 'start' })
 call s:install('junegunn/fzf.vim', { 'type': 'start' })
-call s:install('Yggdroot/indentLine', { 'group': 'vendor', 'type': 'start' })
-call s:install('rust-lang/rust.vim', { 'type': 'start' })
 
 " -----------------------------------------------------------------------------
 " Abbreviations
 " -----------------------------------------------------------------------------
-iab <expr> filemeta strftime(
+inoreabbrev <expr> xright       "→"
+inoreabbrev <expr> xleft        "←"
+inoreabbrev <expr> xup          "↑"
+inoreabbrev <expr> xdown        "↓"
+
+inoreabbrev <expr> fileinfo strftime(
 \ "Author: Akshay Mestry <xa@mes3.dev>\n"
 \ . "Created on: %d %B, %Y\n"
 \ . "Last updated on: %d %B, %Y"
 \ )
+
+inoreabbrev <expr> intmain
+\ "int main() {\n"
+\ . "return 0;\n"
+\ . "}"
