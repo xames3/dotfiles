@@ -17,6 +17,7 @@ set autoread                            " Auto reload the file if changed
 set backspace=indent,eol,start          " Enables backspacing over everything
 set encoding=utf-8                      " Set UTF-8 encoding, by default
 set expandtab                           " Use spaces instead of tabs
+set fillchars=vert:│                    " Thin line for vertical split divider
 set hlsearch                            " Highlight search results
 set ignorecase                          " Ignore case when searching
 set incsearch                           " Highlight search results as you type
@@ -184,7 +185,17 @@ call s:install('junegunn/fzf', { 'type': 'start' })
 call s:install('junegunn/fzf.vim', { 'type': 'start' })
 
 " -----------------------------------------------------------------------------
-" Abbreviations
+" Command mode abbreviations
+" -----------------------------------------------------------------------------
+cabbrev Q                        q
+cabbrev W                        w
+cabbrev Wq                       wq
+cabbrev WQ                       wq
+cabbrev W!                       W!
+cabbrev Q!                       q!
+
+" -----------------------------------------------------------------------------
+" Insert mode abbreviations
 " -----------------------------------------------------------------------------
 inoreabbrev <expr> xright       "→"
 inoreabbrev <expr> xleft        "←"
