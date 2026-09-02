@@ -4,13 +4,13 @@
 "
 " Author: Akshay Mestry <xa@mes3.dev>
 " Created on: 13 December, 2017
-" Last updated on: 30 May, 2026
+" Last updated on: 31 August, 2026
 "
 " This file contains my custom key-bindings/remappings that I use for my code
 " development.
 "
 " -----------------------------------------------------------------------------
-" Space (bar) as the leader key
+" Space as the leader key
 " -----------------------------------------------------------------------------
 let mapleader = " "
 
@@ -20,11 +20,21 @@ let mapleader = " "
 nnoremap <leader>cc              :execute "set colorcolumn=" . (&colorcolumn == "" ? "80" : "")<CR>
 nnoremap <leader>cd              :Ex<CR>
 nnoremap <leader>nt              :tabnew<CR>
+nnoremap <leader>ve              :rightbelow vsplit<Space>
 nnoremap <leader>vt              :vertical botright terminal<CR>
 nnoremap <leader>st              :%s//g<Left><Left>
 nnoremap <leader>tn              :tabnext<CR>
 nnoremap <leader>tp              :tabprevious<CR>
 nnoremap <silent> <Esc>          :nohlsearch<CR>
+
+" -----------------------------------------------------------------------------
+" FZF (files) related key-bindings/remappings
+" -----------------------------------------------------------------------------
+nnoremap <leader>fb              :Buffers<CR>
+nnoremap <leader>ff              :call RootFiles()<CR>
+nnoremap <leader>fg              :Rg<Space>
+nnoremap <leader>fh              :History<CR>
+nnoremap <leader>fr              :Files<CR>
 
 " -----------------------------------------------------------------------------
 " Insert mode related key-bindings/remappings
@@ -35,24 +45,7 @@ inoremap {                       {}<Left>
 inoremap "                       ""<Left>
 
 " -----------------------------------------------------------------------------
-" FZF (files) related key-bindings/remappings
-" -----------------------------------------------------------------------------
-nnoremap <leader>ff              :Files<CR>
-nnoremap <leader>fr              :call RootFiles()<CR>
-nnoremap <leader>fh              :History<CR>
-nnoremap <leader>fb              :Buffers<CR>
-nnoremap <leader>fg              :Rg<Space>
-
-" -----------------------------------------------------------------------------
-" Write/Quit command override
-" -----------------------------------------------------------------------------
-command Q  q
-command W  w
-command Wq wq
-command WQ wq
-
-" -----------------------------------------------------------------------------
-" Disable arrow keys
+" Disable arrow keys in normal and visual mode
 " -----------------------------------------------------------------------------
 for key in ['<Up>', '<Down>', '<Left>', '<Right>']
     exec 'nnoremap' key '<Nop>'
