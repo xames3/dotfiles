@@ -2,14 +2,17 @@
 #
 # Author: Akshay Mestry <xa@mes3.dev>
 # Created on: 13 December, 2020
-# Last updated on: 23 August, 2026
+# Last updated on: 28 August, 2026
 #
 # This file contains most (if not all) of my bash-related configurations.
 
 # =============================================================================
 # Check if the session is running interactively
 # =============================================================================
-[[ -n $PS1 ]] || return
+case $- in
+    *i*) ;;
+    *) return ;;
+esac
 
 # =============================================================================
 # Warn if the registered login shell has drifted from the current Homebrew
@@ -177,6 +180,10 @@ autovenv() {
 
     local path
     path="$(venvpath)"
+
+    if [[ -z "$ACTIVE_VENV" && -n "$VIRTUAL_ENV" ]]; then
+        unset VIRTUAL_ENV
+    fi
 
     if [[ -n "$ACTIVE_VENV" ]]; then
         if [[ -z "$path" || "$path" != "$ACTIVE_VENV" ]]; then
