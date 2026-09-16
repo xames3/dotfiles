@@ -24,7 +24,7 @@ set incsearch                           " Highlight search results as you type
 set list                                " Enable list mode
 set listchars=trail:$,tab:██            " Show trailing and tab characters
 set mouse=n                             " Allows dragging with mouse
-set nobackup                            " Disable creationg of persistent backups
+set nobackup                            " Disable creationg of persistent backup
 set nocompatible                        " Disable vim compatiblity
 set noswapfile                          " Disable creation of `.swp` files
 set nowrap                              " Disable line wrapping
@@ -150,7 +150,7 @@ augroup FileTypeSpecificConfigurations
     autocmd FileType c          setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4 textwidth=78 colorcolumn=78 formatoptions+=t
     autocmd FileType netrw      setlocal bufhidden=delete
     autocmd FileType python     setlocal colorcolumn=72,80
-    autocmd FileType rst        setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4 textwidth=80 spell colorcolumn=80
+    autocmd FileType rst        setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4 textwidth=79 spell colorcolumn=79
     autocmd FileType vim        setlocal textwidth=0
 augroup END
 
@@ -212,3 +212,10 @@ inoreabbrev <expr> intmain
 \ "int main() {\n"
 \ . "return 0;\n"
 \ . "}"
+
+" -----------------------------------------------------------------------------
+" Custom highlight syntax
+" -----------------------------------------------------------------------------
+call matchadd('LongLineColor', '\%>80v.\+')
+call matchadd('AuthorDetails', '\cxa@mes3\.dev\|@\?xames3\|akshay\|mestry')
+call matchadd('CodeAnnotations', '/TODO\|FIXME\|BUG\|HACK\|XXX\|WTF/')
